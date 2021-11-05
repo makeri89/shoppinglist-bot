@@ -15,25 +15,26 @@ const helpMessage = 'Komennot:\n\n' +
                     '\\(erota tuotteet pilkulla\\)'
 
 const addItems = async (data) => {
-  console.log(data)
   const itemsToAdd = data.split(',')
   itemsToAdd.forEach(async (item) => {
-    await Item.create({
-      name: item.trim(),
-      bought: false,
-      added: new Date()
+    await Item.findOrCreate({
+      where: {
+        name: item.trim().toLowerCase()
+      },
+      defaults: {
+        bought: false,
+        added: new Date()
+      }
     })
   })
 }
 
 bot.command('lista', async (ctx) => {
   const items = await Item.findAll()
-  console.log(items)
-  console.log(formatItems(items))
   if (items.length === 0) {
     ctx.reply('Ostoslista on tyhjä\\!')
   } else {
-    await ctx.reply(formatItems(items))
+    ctx.reply(formatItems(items))
   }
 })
 
@@ -56,14 +57,12 @@ bot.command('help', (ctx) => {
 
 bot.on('message', async (ctx) => {
   const data = ctx.message.text
-  if (data !== 'l') {
+  if (data === 'l' || data === 'L') {
+    const items = await Item.findAll()
+    ctx.reply(formatItems(items))
+  } else {
     await addItems(data)
     ctx.reply(formatMessage('Tavarat lisätty ostoslistalle.\n/lista'))
-  } else if (data === 'l') {
-    const items = await Item.find()
-    console.log(items)
-    console.log(formatItems(items))
-    await ctx.reply(formatItems(items))
   }
 })
 

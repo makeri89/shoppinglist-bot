@@ -13,7 +13,8 @@ Item.init({
     type: DataTypes.STRING
   },
   bought: {
-    type: DataTypes.BOOLEAN
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
   sequelize,
