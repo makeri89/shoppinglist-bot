@@ -11,22 +11,26 @@ bot.api.config.use(parseMode('MarkdownV2'))
 const helpMessage = 'Komennot:\n\n' +
                     '/lista - kerron ostoslistan\n' +
                     '/clear - tyhjennän ostoslistan\n' +
-                    '/add - lisää tuotteita ostoslistalle\n' +
-                    '/poista - poista yksittäisiä tuotteita\n' +
-                    '(erota useammat tuotteet pilkulla)'
+                    '/add tuote1, tuote2- lisää tuotteita\n' +
+                    '/poista tuote1, tuote2 - poista tuotteita\n' +
+                    '(erota useammat tuotteet pilkulla)\n\n' + 
+                    'listan saat myös lähettämällä viestin "l" tai "L"\n' +
+                    'sekä tuotteiden lisääminen onnistuu myös ilman komentoa /add'
 
 
 const addItems = async (data) => {
   const itemsToAdd = data.split(',')
   itemsToAdd.forEach(async (item) => {
-    await Item.findOrCreate({
-      where: {
-        name: item.trim().toLowerCase()
-      },
-      defaults: {
-        bought: false
-      }
-    })
+    if (item !== '') {
+      await Item.findOrCreate({
+        where: {
+          name: item.trim().toLowerCase()
+        },
+        defaults: {
+          bought: false
+        }
+      })
+    }
   })
 }
 
