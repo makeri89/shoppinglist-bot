@@ -13,9 +13,7 @@ const helpMessage = 'Komennot:\n\n' +
                     '/clear - tyhjennän ostoslistan\n' +
                     '/add tuote1, tuote2- lisää tuotteita\n' +
                     '/poista tuote1, tuote2 - poista tuotteita\n' +
-                    '(erota useammat tuotteet pilkulla)\n\n' + 
-                    'listan saat myös lähettämällä viestin "l" tai "L"\n' +
-                    'sekä tuotteiden lisääminen onnistuu myös ilman komentoa /add'
+                    '(erota useammat tuotteet pilkulla)'
 
 
 const addItems = async (data) => {
