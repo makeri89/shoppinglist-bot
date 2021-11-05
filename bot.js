@@ -9,10 +9,12 @@ bot.use(hydrateReply)
 bot.api.config.use(parseMode('MarkdownV2'))
 
 const helpMessage = 'Komennot:\n\n' +
-                    '/lista \\- kerron ostoslistan\n' +
-                    '/clear \\- tyhjennän ostoslistan\n' +
-                    '/add \\- lisää tuotteita ostoslistalle\n' +
-                    '\\(erota tuotteet pilkulla\\)'
+                    '/lista - kerron ostoslistan\n' +
+                    '/clear - tyhjennän ostoslistan\n' +
+                    '/add - lisää tuotteita ostoslistalle\n' +
+                    '/poista - poista yksittäisiä tuotteita\n' +
+                    '(erota useammat tuotteet pilkulla)'
+
 
 const addItems = async (data) => {
   const itemsToAdd = data.split(',')
@@ -22,8 +24,18 @@ const addItems = async (data) => {
         name: item.trim().toLowerCase()
       },
       defaults: {
-        bought: false,
-        added: new Date()
+        bought: false
+      }
+    })
+  })
+}
+
+const deleteItems = async (data) => {
+  const itemsToDelete = data.split(',')
+  itemsToDelete.forEach(async (item) => {
+    await Item.destroy({
+      where: {
+        name: item.trim().toLowerCase()
       }
     })
   })
@@ -32,7 +44,7 @@ const addItems = async (data) => {
 bot.command('lista', async (ctx) => {
   const items = await Item.findAll()
   if (items.length === 0) {
-    ctx.reply('Ostoslista on tyhjä\\!')
+    ctx.reply(formatMessage('Ostoslista on tyhjä!'))
   } else {
     ctx.reply(formatItems(items))
   }
@@ -51,8 +63,14 @@ bot.command('add', async (ctx) => {
   ctx.reply(formatMessage('Tavarat lisätty ostoslistalle.\n/lista'))
 })
 
+bot.command('poista', async (ctx) => {
+  const data = ctx.match
+  await deleteItems(data)
+  ctx.reply(formatMessage('Tavara(t) poistettu!'))
+})
+
 bot.command('help', (ctx) => {
-  ctx.reply(helpMessage)
+  ctx.reply(formatMessage(helpMessage))
 })
 
 bot.on('message', async (ctx) => {
