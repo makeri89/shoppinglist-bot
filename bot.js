@@ -18,7 +18,8 @@ const helpMessage = 'Komennot:\n\n' +
 
 const addItems = async (data) => {
   const itemsToAdd = data.split(',')
-  itemsToAdd.forEach(async (item) => {
+  for (let i = 0; i < itemsToAdd.length; i++) {
+    const item = itemsToAdd[i]
     if (item !== '') {
       await Item.findOrCreate({
         where: {
@@ -29,18 +30,19 @@ const addItems = async (data) => {
         }
       })
     }
-  })
+  }
 }
 
 const deleteItems = async (data) => {
   const itemsToDelete = data.split(',')
-  itemsToDelete.forEach(async (item) => {
+  for (let i = 0; i < itemsToDelete.length; i++) {
+    const item = itemsToDelete[i]
     await Item.destroy({
       where: {
         name: item.trim().toLowerCase()
       }
     })
-  })
+  }
 }
 
 bot.command('lista', async (ctx) => {
