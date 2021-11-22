@@ -78,14 +78,22 @@ bot.command('help', (ctx) => {
 })
 
 bot.on('message', async (ctx) => {
-  const data = ctx.message.text
-  if (data === 'l' || data === 'L') {
-    const items = await Item.findAll()
-    ctx.reply(formatItems(items))
+  if (ctx.message.sticker) {
+    ctx.reply('viitikkö olla postaamatta tarroja')
   } else {
-    await addItems(data)
-    ctx.reply(formatMessage('Tavarat lisätty ostoslistalle.\n/lista'))
+    const data = ctx.message.text
+    if (data === 'l' || data === 'L') {
+      const items = await Item.findAll()
+      ctx.reply(formatItems(items))
+    } else {
+      await addItems(data)
+      ctx.reply(formatMessage('Tavarat lisätty ostoslistalle.\n/lista'))
+    }
   }
+})
+
+bot.catch((error) => {
+  console.error(error)
 })
 
 module.exports = bot
